@@ -5,7 +5,6 @@ class Program {
         this.name = null;
         this.weight = null;
         this.subPrograms = [];
-        this.subProgramsWeight = 0;
         this.isLastNode = null;
     }
 }
@@ -52,6 +51,7 @@ fs.readFile(__dirname + "/input.txt", (err, data) => {
         }
         // console.log(programData);
         console.timeEnd("PART1");
+        console.time("PART2");
         findSecondSolution();
     }
 });
@@ -60,19 +60,19 @@ const findSecondSolution = () => {
     var tree = new Program();
     tree.name = programData[bottomProgramName].name;
     tree.weight = programData[bottomProgramName].weight;
-    // tree.subPrograms = programData[bottomProgramName].subPrograms;
     tree.isLastNode = false;
-    tree.subProgramsWeight = addChildNodes(tree);
-    fs.writeFile(__dirname + '/tree.json', JSON.stringify(tree), (err) => {
-        if(err){
-            console.error(err);
-        }
-    })
+    addChildNodes(tree);
+    console.timeEnd("PART2");
+    // fs.writeFile(__dirname + '/tree.json', JSON.stringify(tree), (err) => {
+    //     if(err){
+    //         console.error(err);
+    //     }
+    // })
 }
 
 const addChildNodes = (parentNode) => {
     if(parentNode == null || programData[parentNode.name].subPrograms.length == 0){
-        return 0;
+        return;
     }
     else{
         let subProgramsWeight = 0;
@@ -82,11 +82,10 @@ const addChildNodes = (parentNode) => {
             childProgram.name = programData[childNodeName].name;
             childProgram.weight = programData[childNodeName].weight;
             childProgram.isLastNode = programData[childNodeName].isLastNode;
-            // childProgram.subPrograms = programData[childNodeName].subPrograms;
-            childProgram.subProgramsWeight = addChildNodes(childProgram);
-            subProgramsWeight += childProgram.weight + childProgram.subProgramsWeight;
+            addChildNodes(childProgram);
+            subProgramsWeight += childProgram.weight;
             parentNode.subPrograms.push(childProgram);
         });
-        return subProgramsWeight;
+        parentNode.weight += subProgramsWeight;
     }
 }
