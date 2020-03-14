@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const input = 325489;
+const input = 361527;
 let plane = {};
 
 let currentPosition = {
@@ -140,5 +140,5 @@ const findSecondSolution = () => {
 }
 
 //Don't run both solutions together.. Keep the first one commented when running the second one or it will mess up the initial data.
-// findFirstSolution();
+//findFirstSolution();
 findSecondSolution();
